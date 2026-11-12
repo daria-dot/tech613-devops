@@ -146,3 +146,6 @@ Put `$` in front of the name to get its value:
 echo $MYNAME
 # → daria
 ```
+
+PYTHON DEPLOY.PY && echo "setup monitoring"
+why is an exit code important?

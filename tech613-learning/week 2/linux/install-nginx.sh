@@ -1,4 +1,4 @@
-# ! /bin/bash
+# !/bin/bash
 
 # puropose of this script: run on fresh ubuntu 24.04, install nginx
 # update

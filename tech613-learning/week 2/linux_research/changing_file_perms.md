@@ -7,8 +7,8 @@
  - `man chmod` shows the manual
 
 ## Q2: To change permissions, what must the user be?
- - The **owner** of the file, or
- - **root** (use `sudo`)
+ - The owner of the file, or
+ - root (use `sudo`)
 
 ```bash
 ubuntu@ip-172-31-62-237:~/chmod-test$ sudo touch rootfile.txt
@@ -82,13 +82,3 @@ testfile.txt ubuntu ubuntu 644
  - Who: `u` = user, `g` = group, `o` = other, `a` = all
 
 
-# VARS
-
-variable - something stored in the memory
-env var - name in CAPITALS
-`=` assigns value
-
-making a variable
-`MYNAME=daria`
-access it with
-` echo $MYNAME`

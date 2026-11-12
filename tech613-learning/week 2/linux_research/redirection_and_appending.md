@@ -3,7 +3,7 @@
 
 ## `>`
  - sends output into a file
- - **overwrites** whatever was there before
+ - overwrites whatever was there before
 
 ```bash
 echo "first line" > msg.txt
