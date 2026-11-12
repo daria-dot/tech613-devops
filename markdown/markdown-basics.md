@@ -29,7 +29,7 @@ or cntrl i
 **bold**
 or cntrl 
 italic and bold
-![accuracies](../../images/sep_bands.png)
+![accuracies](images/sep_bands.png)
 
 
 ## Marking code

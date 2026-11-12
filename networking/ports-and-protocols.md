@@ -11,7 +11,7 @@
 - HTTP 80
 - HTTPS 443
   
-![accuracies](../../images/PORT.png)
+![accuracies](images/PORT.png)
 
 linux shells
 - sl
