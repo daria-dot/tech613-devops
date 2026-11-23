@@ -37,7 +37,7 @@ ls
 
 ## Step 2: Database file
 
-`mongo-deploy.yml`. There's no PVC, so the data lives inside the Pod and is lost if the Pod is deleted or restarted.
+`mongo-deploy.yml`. There's no PVC, so the data lives inside the Pod and is lost if the Pod is deleted or restarted
 
 ```yaml
 apiVersion: apps/v1
