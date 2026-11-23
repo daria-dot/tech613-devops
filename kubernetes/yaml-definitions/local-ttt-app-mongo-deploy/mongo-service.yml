@@ -1,12 +1,12 @@
-# Gives the database a fixed name inside the cluster: mongo-service
+
 apiVersion: v1
 kind: Service
 metadata:
   name: mongo-service
 spec:
-  type: ClusterIP  # internal only - the database is not reachable from outside the cluster
+  type: ClusterIP  
   selector:
-    app: mongo  # sends traffic to pods with this label
+    app: mongo  
   ports:
   - port: 27017
     targetPort: 27017

@@ -17,7 +17,6 @@ flowchart LR
     P2 --> M
     P3 --> M
     M -- ":27017" --> DB[("Mongo Pod<br/>1 replica")]
-    DB --- V[("PersistentVolumeClaim<br/>mongo-pvc")]
 ```
 
 
@@ -38,28 +37,15 @@ ls
 
 ## Step 2: Database file
 
-`mongo-deploy.yml` holds two objects, separated by `---`.
+`mongo-deploy.yml`. There's no PVC, so the data lives inside the Pod and is lost if the Pod is deleted or restarted.
 
 ```yaml
-apiVersion: v1
-kind: PersistentVolumeClaim  # storage that survives Pod restarts
-metadata:
-  name: mongo-pvc
-spec:
-  accessModes:
-  - ReadWriteOnce            # one node can mount it read-write
-  resources:
-    requests:
-      storage: 1Gi
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo-deployment
 spec:
-  replicas: 1                # only 1: several Mongo Pods can't share one data folder
-  strategy:
-    type: Recreate           # stop the old Pod before starting a new one
+  replicas: 1                # only 1 database
   selector:
     matchLabels:
       app: mongo
@@ -73,19 +59,12 @@ spec:
         image: mongo:7.0     # official image from Docker Hub
         ports:
         - containerPort: 27017
-        volumeMounts:
-        - name: mongo-data
-          mountPath: /data/db   # where Mongo keeps its data
         readinessProbe:      # Pod only counts as ready once Mongo answers
           exec:
             command: ["mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
           initialDelaySeconds: 5
           periodSeconds: 10
           timeoutSeconds: 10
-      volumes:
-      - name: mongo-data
-        persistentVolumeClaim:
-          claimName: mongo-pvc
 ```
 
 
@@ -113,7 +92,7 @@ spec:
 
 ```bash
 kubectl apply -f mongo-deploy.yml -f mongo-service.yml
-kubectl get pods,pvc
+kubectl get pods
 ```
 
 
@@ -207,12 +186,7 @@ Open **http://localhost:30001**
 
 ```bash
 kubectl delete -f .
-kubectl get all,pvc
+kubectl get all
 ```
 
-
-```bash
-kubectl delete deployment tttapp-deployment mongo-deployment
-kubectl delete service tttapp-service mongo-service
-```
 ![App running with Mongo DB](img/2.png)

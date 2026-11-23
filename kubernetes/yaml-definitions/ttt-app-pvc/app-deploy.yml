@@ -1,0 +1,27 @@
+# Tic-tac-toe app - 3 replicas, connected to MongoDB
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tttapp-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tttapp  # must match the template labels below
+  template:
+    metadata:
+      labels:
+        app: tttapp
+    spec:
+      initContainers:  # runs before the app starts, like depends_on in compose
+      - name: wait-for-mongo
+        image: busybox:1.36
+        command: ["sh", "-c", "until nc -z mongo-service 27017; do echo waiting for mongo; sleep 2; done"]
+      containers:
+      - name: tttapp
+        image: dashaneuro/tech613-tttapp:1.2.0  # my image on Docker Hub
+        ports:
+        - containerPort: 3000  # the port the app listens on
+        env:
+        - name: MONGODB_URI
+          value: mongodb://mongo-service:27017/tictactoe  # "mongo-service" is the database Service's name

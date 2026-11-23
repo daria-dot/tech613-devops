@@ -150,4 +150,21 @@ Managed service disadvantage:
   * maintainer could be an organisation, a community or an individual e.g ubuntu images maintained by Canonical (trustworthy sources)
   * designed to reliable, secure, up to date foundations for building/running applications
   * Pros and cons of using maintained images for your base container images
-* 
+
+
+## Types of autoscaling with k8s
+
+
+  
+* Horizontal Pod Autoscaler (HPA)
+  * Purpose: Auto scale the number of pods in a deployment, replicaset or stateset based on observed CPU or memory usage or custom metrics
+  * Configruation: Using K8s resource definition
+* Cluster Autoscaler:
+  * Purpose: Auto adjustment of size of the K8s cluster (number of nodes) based on pending pods & usage
+  * Configuration: Generally configued at the cluster level
+* Vertical Pod Autoscaler (VPA)
+  * Purpose: Auto adjument of the limits of containers in pods
+  * Configured: Using K8s resource definition
+* KEDA (K8s Event-driven Autoscaling)
+  * Purpose: Provide more fine-grained autoscaling based on a variety of event sources (beyond CPU/memory) like custom metrics, external metrics & event source such as message queues
+  * Configuration: Integrates with HPA & additional setup
