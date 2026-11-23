@@ -17,23 +17,8 @@ flowchart LR
     D -.-> P3
 ```
 
-Running 3 copies of nginx on local Kubernetes cluster and opened them to my machine on port 30001. Taking two YAML files and two `kubectl` commands.
 
-| File | Kind | What it does |
-| --- | --- | --- |
-| `nginx-deploy.yml` | Deployment | Keeps 3 nginx Pods running at all times |
-| `nginx-service.yml` | Service (NodePort) | Gives the Pods one stable address, reachable on port 30001 |
 
-Folder layout:
-
-```
-tech613-devops/
-└── kubernetes/
-    └── yaml-definitions/
-        └── local-nginx-deploy/
-            ├── nginx-deploy.yml
-            └── nginx-service.yml
-```
 
 ## Step 1: Go to the folder with the YAML files
 
@@ -88,16 +73,9 @@ kubectl create -f nginx-deploy.yml
 kubectl get all
 ```
 
-How to read the `kubectl get all` output:
 
-| Line | What it means |
-| --- | --- |
-| `pod/nginx-deployment-658d7b7b77-52tk9` (and 2 more) | 3 Pods, each `1/1 Running`: 1 of 1 containers ready |
-| `service/kubernetes` | Built-in Service for the Kubernetes API. Always there, leave it alone |
-| `deployment.apps/nginx-deployment 3/3` | 3 of 3 wanted Pods are ready |
-| `replicaset.apps/nginx-deployment-658d7b7b77` | The ReplicaSet the Deployment made. DESIRED 3, CURRENT 3, READY 3 |
 
-Pod names are built from the parent names: `nginx-deployment` (Deployment) + `658d7b7b77` (ReplicaSet) + a random 5-character ending per Pod.
+
 
 ## Step 4: See the real containers with Docker
 
@@ -111,7 +89,7 @@ This should show 3 running containers.
 
 ## Step 5:  Service file
 
-The Service gives the 3 Pods one stable address and opens port 30001 so I can reach them from my machine.
+The Service gives the 3 Pods one stable address and opens port 30001
 
 ```yaml
 apiVersion: v1
@@ -135,15 +113,6 @@ A request travels through the three ports in order:
 browser → localhost:30001 (nodePort) → nginx-svc:80 (port) → Pod:80 (targetPort)
 ```
 
-Service types:
-
-| Type | Reachable from | Use it for |
-| --- | --- | --- |
-| ClusterIP (default) | Inside the cluster only | Pods talking to each other |
-| NodePort | Outside, on port 30000-32767 of any node | Local clusters and learning |
-| LoadBalancer | Outside, via a cloud load balancer with a public IP | Production on AWS, GCP or Azure |
-
-
 
 ## Step 6: Create the Service and open the app
 
@@ -154,15 +123,6 @@ kubectl apply -f nginx-service.yml
 kubectl get all
 ```
 
-The new line in the output:
-
-```
-service/nginx-svc   NodePort   10.102.109.217   <none>   80:30001/TCP
-```
-
-- `10.102.109.217` is the Service's internal ClusterIP.
-- `80:30001` means Service port 80 is exposed on node port 30001.
-- The Pods are unchanged (still 15m old). Adding a Service does not restart them.
 
 Open **http://localhost:30001** in a browser to see the nginx page. If that doesn't load, run `kubectl port-forward svc/nginx-svc 8080:80` and open http://localhost:8080 instead.
 
