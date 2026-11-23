@@ -1,0 +1,47 @@
+# MongoDB database - 1 replica
+# Same image as the docker-compose "db" service
+apiVersion: v1
+kind: PersistentVolumeClaim  # storage that survives pod restarts (like the compose "mongo-data" volume)
+metadata:
+  name: mongo-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce  # one node can mount it read-write
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-deployment
+spec:
+  replicas: 1  # only 1 - several Mongo pods can't share one data folder
+  strategy:
+    type: Recreate  # stop the old pod before starting a new one, so two Mongos never use the same data folder
+  selector:
+    matchLabels:
+      app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo:7.0  # official image from Docker Hub
+        ports:
+        - containerPort: 27017  # MongoDB's default port
+        volumeMounts:
+        - name: mongo-data
+          mountPath: /data/db  # where Mongo stores its data
+        readinessProbe:  # like the compose healthcheck - pod is "ready" once Mongo answers
+          exec:
+            command: ["mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 10  # mongosh takes a few seconds to start; the 1s default is too short
+      volumes:
+      - name: mongo-data
+        persistentVolumeClaim:
+          claimName: mongo-pvc
