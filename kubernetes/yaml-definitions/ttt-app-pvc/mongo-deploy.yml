@@ -1,7 +1,6 @@
-# MongoDB database - 1 replica
-# Same image as the docker-compose "db" service
+
 apiVersion: v1
-kind: PersistentVolumeClaim  # storage that survives pod restarts (like the compose "mongo-data" volume)
+kind: PersistentVolumeClaim  # storage that survives pod restarts
 metadata:
   name: mongo-pvc
 spec:
