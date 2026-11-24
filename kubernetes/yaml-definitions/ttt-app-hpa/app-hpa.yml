@@ -1,0 +1,19 @@
+# Horizontal Pod Autoscaler - scales only the app Deployment between 2 and 10 pods
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: tttapp-hpa
+spec:
+  scaleTargetRef:         
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tttapp-deployment
+  minReplicas: 2           # never fewer than 2 pods
+  maxReplicas: 10          # never more than 10 pods
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50   # add pods when average CPU is above 50% of the request (50m)
