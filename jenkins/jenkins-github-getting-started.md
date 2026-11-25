@@ -185,15 +185,19 @@ Job 2 → Post-build Actions → Build other projects → `daria-ttt-job3-cd-dep
 
 ### 6. Test
 
-1. Change the front page on `dev` (add a timestamp)
+1. Change the front page on `dev` (add a timestamp) line 99 in server.js
 2. `git add .` → `git commit -m "change front page"` → `git push origin dev`
 3. Job 1 → Job 2 → Job 3 run, Job 3 shows "Started by upstream project daria-ttt-job2-ci-merge"
 4. Refresh `http://<APP_EC2_PUBLIC_IP>`, the change shows
 
+Before:
+
+![before](images/before.png)
 
 
+After:
 
-
+![after](images/after.png)
 If the app goes down:
 
 ```bash
