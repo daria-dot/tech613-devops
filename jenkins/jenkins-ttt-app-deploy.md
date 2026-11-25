@@ -1,6 +1,10 @@
 
 ## Automatically pushing changes to ttt app via Jenkins
 - [Automatically pushing changes to ttt app via Jenkins](#automatically-pushing-changes-to-ttt-app-via-jenkins)
+- [Why the pipeline is set up this way](#why-the-pipeline-is-set-up-this-way)
+  - [Why it's done like this](#why-its-done-like-this)
+  - [Benefits for a developer](#benefits-for-a-developer)
+  - [Benefits for the organisation](#benefits-for-the-organisation)
   - [1. Generate private keys for jenkins](#1-generate-private-keys-for-jenkins)
   - [2. Add the public key to the GitHub repo (Deploy key)](#2-add-the-public-key-to-the-github-repo-deploy-key)
   - [3. Add the private key to Jenkins (Credentials)](#3-add-the-private-key-to-jenkins-credentials)
@@ -19,7 +23,39 @@
   - [5. Link Job 2 → Job 3](#5-link-job-2--job-3)
   - [6. Test](#6-test)
 
+## Why the pipeline is set up this way
 
+The pipeline is made of 3 Jenkins jobs. Each job only runs if the one before it passed.
+
+- Job 1 (CI test) - runs when push to the dev branch (GitHub webhook) is made. It runs npm install and npm test.
+- Job 2 (CI merge) - runs if Job 1 passes. It merges dev into main and pushes main to GitHub.
+- Job 3 (CD deploy) - runs if Job 2 passes. It copies the app to the EC2 instance with SSH and restarts it with pm2.
+
+### Why it's done like this
+
+-  main only has code that passed the tests
+- The webhook starts the pipeline as soon as I push, so I don't have to start it myself.
+- Tests run before the merge, so if something is broken it stops there and doesn't go live
+- Deploying is a separate job, so if it fails I can just run that job again.
+- Each job shows which job started it, so I can see where a change came from, as well as check logs in Jenkins
+- The SSH key is saved in Jenkins credentials, not in the script or on GitHub
+
+### Benefits for a developer
+
+- I find out quickly if my change broke something.
+- After git push I don't have to do anything else to get it live.
+- Fewer mistakes, like forgetting to run tests or deploying the wrong branch.
+
+### Benefits for the organisation
+
+- Changes get to users faster.
+- Every change is tested, so fewer bugs make it to production.
+- Small changes released often are less risky and easier to roll back.
+- Every release follows the same steps, whoever does it.
+- Jenkins keeps a history of what was tested and deployed and when.
+- Saves time and money on manual testing and deploying.
+- Passwords and keys are kept in Jenkins and not on people's laptops or in the code.
+- More developers can work on the same app without one person having to do all the releases.
 
 
 ### 1. Generate private keys for jenkins
