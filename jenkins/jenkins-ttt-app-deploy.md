@@ -1,5 +1,26 @@
 
-## Getting started with Jenkins and github
+## Automatically pushing changes to ttt app via Jenkins
+- [Automatically pushing changes to ttt app via Jenkins](#automatically-pushing-changes-to-ttt-app-via-jenkins)
+  - [1. Generate private keys for jenkins](#1-generate-private-keys-for-jenkins)
+  - [2. Add the public key to the GitHub repo (Deploy key)](#2-add-the-public-key-to-the-github-repo-deploy-key)
+  - [3. Add the private key to Jenkins (Credentials)](#3-add-the-private-key-to-jenkins-credentials)
+  - [4. Connect the Jenkins job to the repo](#4-connect-the-jenkins-job-to-the-repo)
+  - [5. Set up the webhook on GitHub](#5-set-up-the-webhook-on-github)
+- [Job 2 – CI Merge (dev → main)](#job-2--ci-merge-dev--main)
+  - [1. Create the job](#1-create-the-job)
+  - [3. Source Code Management → Git](#3-source-code-management--git)
+  - [5. Post-build Actions → Git Publisher](#5-post-build-actions--git-publisher)
+  - [6. Link Job 1 → Job 2](#6-link-job-1--job-2)
+- [APP deployment](#app-deployment)
+  - [1. App instance](#1-app-instance)
+  - [2. Security group](#2-security-group)
+  - [3. Add the EC2 key to Jenkins](#3-add-the-ec2-key-to-jenkins)
+  - [4. Configure Job 3](#4-configure-job-3)
+  - [5. Link Job 2 → Job 3](#5-link-job-2--job-3)
+  - [6. Test](#6-test)
+
+
+
 
 ### 1. Generate private keys for jenkins
    
